@@ -20,7 +20,7 @@ public class StudentRestController {
     private List<Student> theStudents;
 
     @PostConstruct
-    public void loadData(){
+    public void loadData() {
 
         theStudents = new ArrayList<>();
 
@@ -36,16 +36,16 @@ public class StudentRestController {
     }
 
     @GetMapping("students/{studentId}")
-    public Student getStudent(@PathVariable int studentId){
+    public Student getStudent(@PathVariable int studentId) {
 
         if (studentId >= theStudents.size() || studentId < 0) {
-            throw new StudentNotFoundException ("Student is not found " + studentId);
+            throw new StudentNotFoundException("Student is not found " + studentId);
         }
         return theStudents.get(studentId);
     }
 
     @ExceptionHandler
-    public ResponseEntity<StudentErrorResponse> handleException(StudentNotFoundException exc){
+    public ResponseEntity<StudentErrorResponse> handleException(StudentNotFoundException exc) {
 
         // create a StudentErrorResponse
         StudentErrorResponse error = new StudentErrorResponse();
@@ -57,5 +57,17 @@ public class StudentRestController {
         // return ResponseEntity
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<StudentErrorResponse> handleException(Exception exc) {
+
+        StudentErrorResponse error = new StudentErrorResponse();
+
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(exc.getMessage());
+        error.setTimeStamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }
