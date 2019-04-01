@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +17,23 @@ import java.util.List;
 @RequestMapping("/api")
 public class StudentRestController {
 
+    private List<Student> theStudents;
+
+    @PostConstruct
+    public void loadData(){
+
+        theStudents = new ArrayList<>();
+
+        theStudents.add(new Student("Will", "Smith"));
+        theStudents.add(new Student("Bruce", "Willith"));
+        theStudents.add(new Student("Tom", "Hanks"));
+    }
+
     @GetMapping("/students")
     public List<Student> getStudents() {
 
-        List<Student> list = new ArrayList<>();
 
-        list.add(new Student("Will", "Smith"));
-        list.add(new Student("Bruce", "Willith"));
 
-        return list;
+        return theStudents;
     }
 }
